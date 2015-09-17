@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <Button
+        android:layout_margin="5dp"
+        android:id="@+id/button_nate"
+        android:text="@string/button_nate"
+        android:background="@color/button_nate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_margin="5dp"
+        android:id="@+id/button_emergency"
+        android:text="@string/button_emergency"
+        android:background="@color/button_emergency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_margin="5dp"
+        android:id="@+id/button_gallery"
+        android:text="@string/button_gallery"
+        android:background="@color/button_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_margin="5dp"
+        android:id="@+id/button_finish"
+        android:text="@string/button_finish"
+        android:background="@color/button_finish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

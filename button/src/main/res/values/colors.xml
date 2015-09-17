@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="button_nate">#98ff64</color>
+    <color name="button_emergency">#ff863a</color>
+    <color name="button_gallery">#65acff</color>
+    <color name="button_finish">#f625ff</color>
+
+</resources>
