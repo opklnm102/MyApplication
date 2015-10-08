@@ -1,0 +1,141 @@
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:shrinkColumns="*"
+    android:stretchColumns="*"
+    android:padding="8dp"
+    tools:context=".MainActivity">
+
+    <TableRow>
+        <EditText
+            android:textStyle="bold"
+            android:id="@+id/editText_num1"
+            android:textSize="18sp"
+            android:hint="@string/editText_num1"
+            android:layout_span="5"/>
+    </TableRow>
+
+    <TableRow>
+        <EditText
+            android:textStyle="bold"
+            android:id="@+id/editText_num2"
+            android:textSize="18sp"
+            android:hint="@string/editText_num2"
+            android:layout_span="5" />
+    </TableRow>
+
+    <TableRow>
+        <Button
+            android:layout_span="1"
+            android:textStyle="bold"
+            android:id="@+id/button_num0"
+            android:text="@string/button_num0"/>
+
+        <Button
+            android:layout_span="1"
+            android:textStyle="bold"
+            android:id="@+id/button_num1"
+            android:text="@string/button_num1"/>
+
+        <Button
+            android:layout_span="1"
+            android:textStyle="bold"
+            android:id="@+id/button_num2"
+            android:text="@string/button_num2"/>
+
+        <Button
+            android:layout_span="1"
+            android:textStyle="bold"
+            android:id="@+id/button_num3"
+            android:text="@string/button_num3"/>
+
+        <Button
+            android:layout_span="1"
+            android:textStyle="bold"
+            android:id="@+id/button_num4"
+            android:text="@string/button_num4"/>
+    </TableRow>
+
+    <TableRow>
+        <Button
+            android:layout_span="1"
+            android:textStyle="bold"
+            android:id="@+id/button_num5"
+            android:text="@string/button_num5"/>
+
+        <Button
+            android:layout_span="1"
+            android:textStyle="bold"
+            android:id="@+id/button_num6"
+            android:text="@string/button_num6"/>
+
+        <Button
+            android:layout_span="1"
+            android:textStyle="bold"
+            android:id="@+id/button_num7"
+            android:text="@string/button_num7"/>
+
+        <Button
+            android:layout_span="1"
+            android:textStyle="bold"
+            android:id="@+id/button_num8"
+            android:text="@string/button_num8"/>
+
+        <Button
+            android:layout_span="1"
+            android:textStyle="bold"
+            android:id="@+id/button_num9"
+            android:text="@string/button_num9"/>
+    </TableRow>
+
+    <TableRow>
+        <Button
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_margin="8dp"
+            android:id="@+id/button_add"
+            android:text="@string/button_add"
+           android:layout_span="5" />
+    </TableRow>
+
+    <TableRow>
+        <Button
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_margin="8dp"
+            android:id="@+id/button_sub"
+            android:text="@string/button_sub"
+            android:layout_span="5" />
+    </TableRow>
+
+    <TableRow>
+        <Button
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_margin="8dp"
+            android:id="@+id/button_mul"
+            android:text="@string/button_mul"
+            android:layout_span="5" />
+    </TableRow>
+
+    <TableRow>
+        <Button
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_margin="8dp"
+            android:id="@+id/button_div"
+            android:text="@string/button_div"
+            android:layout_span="5" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:textColor="@android:color/holo_red_light"
+            android:id="@+id/textView_result"
+            android:text="@string/textView_result"
+            android:textSize="30sp"
+            android:layout_span="5" />
+    </TableRow>
+
+</TableLayout>
