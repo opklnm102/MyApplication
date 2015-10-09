@@ -1,9 +1,11 @@
 package me.dong.calc2;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -68,6 +70,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSub.setOnClickListener(this);
         btnMul.setOnClickListener(this);
         btnDiv.setOnClickListener(this);
+
+        /* 키보드 안나오게 */
+        etNum1.setInputType(0);
+        etNum1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(etNum1.getWindowToken(), 0);
+            }
+        });
+
+        etNum2.setInputType(0);
+        etNum2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(etNum2.getWindowToken(),0);
+            }
+        });
     }
 
     @Override
