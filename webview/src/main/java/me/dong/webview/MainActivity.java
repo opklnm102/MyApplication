@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String strUrl = etUrl.getText().toString();
 
+//                if(strUrl.matches("http://.*"))
                 if (!"http://".equals(strUrl.substring(0, 7))) {
                     StringBuilder sbUrl = new StringBuilder();
                     sbUrl.insert(0,"http://");
