@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
@@ -24,8 +25,13 @@ public class MainActivity extends AppCompatActivity {
 
     DatePicker dp;
     EditText etDiary;
-    FloatingActionButton fabWrite;
+    Button btnWrite;
     String fileName;
+
+    Calendar cal;
+    int cYear;
+    int cMonth;
+    int cDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +44,14 @@ public class MainActivity extends AppCompatActivity {
 
         dp = (DatePicker) findViewById(R.id.datePicker);
         etDiary = (EditText) findViewById(R.id.editText_diary);
-        fabWrite = (FloatingActionButton) findViewById(R.id.fab_write);
-        fabWrite.setEnabled(false);
+        btnWrite = (Button) findViewById(R.id.button_write);
 
-        Calendar cal = Calendar.getInstance();
-        int cYear = cal.get(Calendar.YEAR);
-        int cMonth = cal.get(Calendar.MONTH);
-        int cDay = cal.get(Calendar.DAY_OF_MONTH);
+        cal = Calendar.getInstance();
+        cYear = cal.get(Calendar.YEAR);
+        cMonth = cal.get(Calendar.MONTH);
+        cDay = cal.get(Calendar.DAY_OF_MONTH);
+
+        Log.e(TAG, " onDateChanged" + cYear + cMonth + cDay);
 
         dp.init(cYear, cMonth, cDay, new DatePicker.OnDateChangedListener() {
             @Override
@@ -53,11 +60,11 @@ public class MainActivity extends AppCompatActivity {
                 fileName = Integer.toString(year) + "-" + Integer.toString(monthOfYear + 1) + "-" + Integer.toString(dayOfMonth) + ".txt";
                 String str = readDiary(fileName);
                 etDiary.setText(str);
-                fabWrite.setEnabled(true);
+                btnWrite.setEnabled(true);
             }
         });
 
-        fabWrite.setOnClickListener(new View.OnClickListener() {
+        btnWrite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -72,9 +79,16 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fileName = Integer.toString(cYear) + "-" + Integer.toString(cMonth + 1) + "-" + Integer.toString(cDay) + ".txt";
+        String str = readDiary(fileName);
+        etDiary.setText(str);
     }
 
     String readDiary(String fName) {
@@ -87,12 +101,14 @@ public class MainActivity extends AppCompatActivity {
             inFs.read(txt);
             inFs.close();
             diaryStr = (new String(txt)).trim();
+            btnWrite.setText("수정하기");
 
         } catch (IOException e) {
             e.printStackTrace();
             etDiary.setHint("일기 없음");
+            btnWrite.setText("새로 저장");
         }
-
+        Log.e(TAG, " diaryStr " + diaryStr);
         return diaryStr;
     }
 }
