@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             inFs.close();
             diaryStr = (new String(txt)).trim();
             btnWrite.setText("수정하기");
-
+            btnWrite.setEnabled(true);
         } catch (IOException e) {
             e.printStackTrace();
             etDiary.setHint("일기 없음");
