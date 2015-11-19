@@ -12,8 +12,9 @@
     <DatePicker
         android:id="@+id/datePicker"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:calendarViewShown="false"/>
+        android:layout_height="295dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"/>
 
     <EditText
         android:id="@+id/editText_diary"
@@ -24,7 +25,7 @@
 
     <Button
         android:id="@+id/button_write"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Button"
         android:enabled="false"
