@@ -53,34 +53,50 @@ public class MainActivity extends AppCompatActivity {
 
         Log.e(TAG, " onDateChanged" + cYear + cMonth + cDay);
 
-        dp.init(cYear, cMonth, cDay, new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Log.e(TAG, " onDateChanged");
-                fileName = Integer.toString(year) + "-" + Integer.toString(monthOfYear + 1) + "-" + Integer.toString(dayOfMonth) + ".txt";
-                String str = readDiary(fileName);
-                etDiary.setText(str);
-                btnWrite.setEnabled(true);
-            }
+//        dp.init(cYear, cMonth, cDay, new DatePicker.OnDateChangedListener() {
+//            @Override
+//            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                Log.e(TAG, " onDateChanged");
+//                fileName = Integer.toString(year) + "-" + Integer.toString(monthOfYear + 1) + "-" + Integer.toString(dayOfMonth) + ".txt";
+//                String str = readDiary(fileName);
+//                etDiary.setText(str);
+//                btnWrite.setEnabled(true);
+//            }
+//        });
+
+        MyOnDateChangedListener myOnDateChangedListener = new MyOnDateChangedListener();
+
+        dp.init(cYear, cMonth, cDay, myOnDateChangedListener);
+
+                btnWrite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        try {
+                            FileOutputStream outFs = openFileOutput(fileName, Context.MODE_PRIVATE);
+                            String str = etDiary.getText().toString();
+                            outFs.write(str.getBytes());
+                            outFs.close();
+                            Snackbar.make(view, fileName + "이 저장됨됨", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
         });
+    }
 
-        btnWrite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    class MyOnDateChangedListener implements DatePicker.OnDateChangedListener {
 
-                try {
-                    FileOutputStream outFs = openFileOutput(fileName, Context.MODE_PRIVATE);
-                    String str = etDiary.getText().toString();
-                    outFs.write(str.getBytes());
-                    outFs.close();
-                    Snackbar.make(view, fileName + "이 저장됨됨", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        @Override
+        public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            Log.e(TAG, " onDateChanged");
+            fileName = Integer.toString(year) + "-" + Integer.toString(monthOfYear + 1) + "-" + Integer.toString(dayOfMonth) + ".txt";
+            String str = readDiary(fileName);
+            etDiary.setText(str);
+            btnWrite.setEnabled(true);
+        }
     }
 
     @Override
