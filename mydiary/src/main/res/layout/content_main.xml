@@ -35,7 +35,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/editText_contents"
+        android:id="@+id/editText_diary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="일기 내용" />

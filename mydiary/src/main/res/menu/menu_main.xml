@@ -1,6 +1,38 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/action_reRead"
+        android:orderInCategory="100"
+        android:title="다시 읽기"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_remove"
+        android:orderInCategory="200"
+        android:title="일기 삭제"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_size"
+        android:orderInCategory="300"
+        android:title="글씨 크기"
+        app:showAsAction="never">
+
+        <menu>
+            <item
+                android:id="@+id/size_big"
+                android:title="크게"/>
+
+            <item
+                android:id="@+id/size_normal"
+                android:title="보통"/>
+
+            <item
+                android:id="@+id/size_small"
+                android:title="작게"/>
+        </menu>
+    </item>
 </menu>
