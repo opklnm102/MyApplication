@@ -58,6 +58,7 @@ o- 일기파일이름은년_월_일.txt로한다.
 
 public class MainActivity extends AppCompatActivity {
 
+    //로깅
     public static final String TAG = MainActivity.class.getSimpleName();
 
     TextView tvDate;
@@ -65,9 +66,11 @@ public class MainActivity extends AppCompatActivity {
     EditText etDiary;
     String fileName;
 
+    //sd카드 경로
     final String strSDpath = Environment.getExternalStorageDirectory().getAbsolutePath();
     final File myDir = new File(strSDpath + "/mydir");
 
+    //날짜
     Calendar cal;
     int cYear;
     int cMonth;
@@ -82,22 +85,25 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle("My Diary");
 
+        //sd카드에 /mydir폴더 생성
         myDir.mkdirs();
 
+        //현재 날짜 셋팅
         cal = Calendar.getInstance();
         cYear = cal.get(Calendar.YEAR);
         cMonth = cal.get(Calendar.MONTH) + 1;
         cDay = cal.get(Calendar.DAY_OF_MONTH);
 
-        Log.e(TAG, " init cal" + cYear + " " + cMonth + " " + cDay);
+        //날짜 확인용
+        Log.d(TAG, " init cal" + cYear + " " + cMonth + " " + cDay);
 
         tvDate = (TextView) findViewById(R.id.textView_date);
         btnWrite = (Button) findViewById(R.id.button_save);
         etDiary = (EditText) findViewById(R.id.editText_diary);
 
+        //처음에 읽어오기
         tvDate.setText(cYear + "년 " + cMonth + "월 " + cDay + "일");
-        fileName = Integer.toString(cYear) + "-" + Integer.toString(cMonth) + "-" + Integer.toString(cDay) + ".txt";
-
+        fileName =    makeFileName();
         String str = readDiary(fileName);
         etDiary.setText(str);
 
@@ -112,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                         cDay = dayOfMonth;
 
                         tvDate.setText(cYear + "년 " + cMonth + "월 " + cDay + "일");
-                        fileName = Integer.toString(cYear) + "-" + Integer.toString(cMonth) + "-" + Integer.toString(cDay) + ".txt";
+                        fileName =    makeFileName();
 
                         String str = readDiary(fileName);
                         etDiary.setText(str);
@@ -130,52 +136,50 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void writeDiary(View view) {
+    //파일 이름을 만든다.
+    protected String makeFileName(){
+        return Integer.toString(cYear) + "_" + Integer.toString(cMonth) + "_" + Integer.toString(cDay) + ".txt";
+    }
 
+    //일기 저장, 저장할 디렉토리로 스트림을 열어 저장
+    protected void writeDiary(View view) {
         try {
             File file = new File(myDir, fileName);
-            FileOutputStream outFs = new FileOutputStream(file);
-
-//            FileOutputStream outFs = openFileOutput(fileName, Context.MODE_PRIVATE);
+            FileOutputStream outFs = new FileOutputStream(file);  //스트림 열기
 
             String str = etDiary.getText().toString();
             outFs.write(str.getBytes());
-            outFs.close();
+            outFs.close();  //파일을 쓰고 스트림을 닫는다.
 
-            Snackbar.make(view, fileName + "이 저장됨됨", Snackbar.LENGTH_LONG)
+            //저장됨을 사용자에게 알려준다.
+            Snackbar.make(view, fileName + "이 저장됨", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
 
             btnWrite.setText("수정하기");
-
-            File[] sysFiles = new File(strSDpath + "/mydir").listFiles();
-            for (int i = 0; i < sysFiles.length; i++) {
-                Log.e(TAG, " file " + sysFiles[i].toString());
-            }
-
         } catch (IOException e) {
             e.printStackTrace();
+            Snackbar.make(view, fileName + "이 저장 실패", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         }
     }
 
-    String readDiary(String fName) {
+    protected String readDiary(String fName) {
+
         String diaryStr = null;
-        FileInputStream inFs;
 
         try {
-            inFs = new FileInputStream(myDir + "/" + fName);
+            FileInputStream inFs = new FileInputStream(myDir + "/" + fName);  //저장할 경로를 지정
             byte[] txt = new byte[inFs.available()];
             inFs.read(txt);
-            Log.e(TAG, " txt " + txt);
             inFs.close();
             diaryStr = (new String(txt)).trim();
             btnWrite.setText("수정하기");
             btnWrite.setEnabled(true);
-        } catch (IOException e) {
+        } catch (IOException e) {  //파일이 없어서 읽을 수 없으면 Exception이 뜨므로 예외처리
             e.printStackTrace();
             etDiary.setHint("일기 없음");
             btnWrite.setText("새로 저장");
         }
-        Log.e(TAG, " diaryStr " + diaryStr);
         return diaryStr;
     }
 
@@ -186,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
 
         switch (id) {
@@ -202,8 +206,13 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                File file = new File(myDir, fileName);
-                                file.delete();
+
+                                try{
+                                    File file = new File(myDir, fileName);
+                                    file.delete();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
 
                                 String  str = readDiary(fileName);
                                 etDiary.setText(str);

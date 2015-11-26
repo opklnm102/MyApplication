@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">mydiary</string>
     <string name="action_settings">Settings</string>
+
+    <string name="save">저장</string>
+
+    <string name="diary_content">일기 내용</string>
+
+
 </resources>

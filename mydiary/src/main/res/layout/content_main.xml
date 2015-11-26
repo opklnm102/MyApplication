@@ -29,15 +29,13 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:text="저장"
+            android:text="@string/save"
             android:textSize="20sp" />
-
     </LinearLayout>
 
     <EditText
         android:id="@+id/editText_diary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="일기 내용" />
-
+        android:hint="@string/diary_content" />
 </LinearLayout>
