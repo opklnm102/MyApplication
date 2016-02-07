@@ -5,25 +5,15 @@ package me.dong.sqlite;
  */
 public class GroupItem {
 
-    private int id;
     private String name;
     private int number;
 
     public GroupItem() {
     }
 
-    public GroupItem(int id, String name, int number) {
-        this.id = id;
+    public GroupItem(String name, int number) {
         this.name = name;
         this.number = number;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

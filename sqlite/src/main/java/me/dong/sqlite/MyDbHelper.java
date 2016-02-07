@@ -2,6 +2,7 @@ package me.dong.sqlite;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -18,9 +19,10 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "myDb.db";
 
-    public static MyDbHelper getInstance(Context context){
-        synchronized (MyDbHelper.class){
-            if(instance == null){
+    public static MyDbHelper getInstance(Context context) {
+        //Todo: Double Check 적용
+        synchronized (MyDbHelper.class) {
+            if (instance == null) {
                 instance = new MyDbHelper(context);
                 db = instance.getWritableDatabase();
             }
@@ -36,7 +38,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         final String SQL_CREATE_GROUP_TABLE = "CREATE TABLE " + MyDbContracts.GroupEntary.TABLE_NAME + " ("
-                + MyDbContracts.GroupEntary.COLUMN_GROUP_NAME + " TEXT(20) PRIMARY KEY, "
+                + MyDbContracts.GroupEntary.COLUMN_GROUP_NAME + " TEXT(20) PRIMARY KEY UNIQUE, "
                 + MyDbContracts.GroupEntary.COLUMN_GROUP_NUMBER + " INTEGER" +
                 ");";
 
@@ -53,21 +55,55 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
             onCreate(db);
 
+            //Todo: 버전 갱신
             version = CUR_DATABASE_VERSION;
         }
     }
 
     @Override
     public synchronized void close() {
-        if(instance != null)
+        if (instance != null)
             instance = null;
         super.close();
     }
 
-//    public long insert(String table, ContentValues values){
-//        return
-//    }
+    /*
+    DB CRUD 메소드 구현
+    C - create
+    R - read
+    U - update
+    D - delete
+     */
+    public long insert(ContentValues values) {
+        //execSQL()를 이용해서 직접 SQL문으로 레코드를 추가할 수도 있다.
+        return db.insert(MyDbContracts.GroupEntary.TABLE_NAME, null, values);
+    }
+
+    public Cursor query(String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy){
+        return getReadableDatabase().query(MyDbContracts.GroupEntary.TABLE_NAME,
+                columns,
+                selection,
+                selectionArgs,
+                groupBy,
+                having,
+                orderBy);
+    }
+
+    public int update(ContentValues values, String whereClause, String[] whereArgs){
+        //갱신된 레코드수 리턴
+        return db.update(MyDbContracts.GroupEntary.TABLE_NAME,
+                values,
+                whereClause,
+                whereArgs);
+    }
+
+    public int delete(String whereClause, String[] whereArgs){
+        //Todo: 개별, 전체 삭제 구현. 애버노트 메인액티비티 봐야할듯
+        //삭제된 레코드수 리턴
+        return db.delete(MyDbContracts.GroupEntary.TABLE_NAME, whereClause, whereArgs);
+    }
 }
 
 //http://overoid.tistory.com/21
 //http://wale.oyediran.me/2015/04/02/android-sqlite-dao-design/
+//https://www.youtube.com/watch?v=O45YVt_Xgak

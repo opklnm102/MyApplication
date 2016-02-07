@@ -11,14 +11,18 @@ import java.util.List;
  */
 public interface MyDao {
 
-    public GroupItem findGroupByName(String groupName);
-    public List<GroupItem> findAllGroups();
+    public GroupItem findGroupByName(String groupName);  //이름으로 검색
 
-    public boolean addGroup(GroupItem item);
+    public List<GroupItem> findAllGroups();  //전체 검색
+
+    public boolean addGroup(GroupItem item) throws SQLException;  //추가
+
+    //Todo: UI변경시 구현, 현재UI로는 불가
     //public boolean addGroups(List<GroupItem> groupItems);
 
-    public boolean updateGroupByName();
+    public boolean updateGroupByName(String groupName, GroupItem item) throws SQLException;  //이름으로 갱신
 
-    public boolean deleteAllGroups();
-    //public boolean deleteAllGroups();
+    public boolean deleteGroupByName(String groupName) throws SQLException;  //이름으로 삭제
+
+    public boolean deleteAllGroups() throws SQLException;  //전체삭제
 }

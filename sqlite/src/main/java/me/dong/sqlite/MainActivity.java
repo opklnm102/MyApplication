@@ -15,18 +15,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
     Toolbar mToolbar;
 
-    MyDbHelper myDbHelper;
-    SQLiteDatabase sqlDb;
+    //DB CRUD UI
     EditText etName, etNumber;
     Button btnInit, btnInsert, btnUpdate, btnSelect, btnDelete;
 
+    //DB 결과 UI
     EditText etResultName, etResultNumber;
+
+    //DB작업 클래스
+    MyDaoImpl mMyDaoImpl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,94 +55,150 @@ public class MainActivity extends AppCompatActivity {
         etResultName = (EditText) findViewById(R.id.editText_result_name);
         etResultNumber = (EditText) findViewById(R.id.editText_result_number_of_people);
 
-        myDbHelper = MyDbHelper.getInstance(this);
+        mMyDaoImpl = new MyDaoImpl(this);
 
+        //db초기화
         btnInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sqlDb = myDbHelper.getWritableDatabase();
-                myDbHelper.onUpgrade(sqlDb, 1, 2);
-                sqlDb.close();
+//                sqlDb = myDbHelper.getWritableDatabase();
+//                myDbHelper.onUpgrade(sqlDb, 1, 2);
+//                sqlDb.close();
             }
         });
 
+        //데이터 insert
         btnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sqlDb = myDbHelper.getWritableDatabase();
-                sqlDb.execSQL("INSERT INTO " +
-                        MyDbContracts.GroupEntary.TABLE_NAME + " VALUES ( '"
-                        + etName.getText().toString() + "', "
-                        + etNumber.getText().toString() + ");");
-                sqlDb.close();
-                Toast.makeText(MainActivity.this, "입력됨", Toast.LENGTH_LONG).show();
+                GroupItem groupItem = new GroupItem(etName.getText().toString(), Integer.parseInt(etNumber.getText().toString()));
 
-                btnSelect.callOnClick();
+                try {
+                    if(mMyDaoImpl.addGroup(groupItem)){
+                        Toast.makeText(MainActivity.this, "입력됨", Toast.LENGTH_LONG).show();
+                        btnSelect.callOnClick();
+                    }else{
+                        Toast.makeText(MainActivity.this, "입력 실패", Toast.LENGTH_LONG).show();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+//                sqlDb = myDbHelper.getWritableDatabase();
+//                sqlDb.execSQL("INSERT INTO " +
+//                        MyDbContracts.GroupEntary.TABLE_NAME + " VALUES ( '"
+//                        + etName.getText().toString() + "', "
+//                        + etNumber.getText().toString() + ");");
+//                sqlDb.close();
+
+//                Toast.makeText(MainActivity.this, "입력됨", Toast.LENGTH_LONG).show();
+//                btnSelect.callOnClick();
             }
         });
 
+        //데이터 조회
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sqlDb = myDbHelper.getReadableDatabase();
-                Cursor cursor = sqlDb.rawQuery("SELECT * FROM " +
-                        MyDbContracts.GroupEntary.TABLE_NAME + ";", null);
 
                 String strNames = "그룹 이름" + "\r\n" + "-----" + "\r\n";
                 String strNumbers = "인원" + "\r\n" + "-----" + "\r\n";
 
-                while (cursor.moveToNext()) {
-                    strNames += cursor.getString(0) + "\r\n";
-                    strNumbers += cursor.getString(1) + "\r\n";
+                List<GroupItem> groupItems = mMyDaoImpl.findAllGroups();
+
+                for (GroupItem item : groupItems) {
+                    strNames += item.getName() + "\r\n";
+                    strNumbers += item.getNumber() + "\r\n";
                 }
+
+//                sqlDb = myDbHelper.getReadableDatabase();
+//                Cursor cursor = sqlDb.rawQuery("SELECT * FROM " +
+//                        MyDbContracts.GroupEntary.TABLE_NAME + ";", null);
+
+//                String strNames = "그룹 이름" + "\r\n" + "-----" + "\r\n";
+//                String strNumbers = "인원" + "\r\n" + "-----" + "\r\n";
+
+//                while (cursor.moveToNext()) {
+//                    strNames += cursor.getString(0) + "\r\n";
+//                    strNumbers += cursor.getString(1) + "\r\n";
+//                }
 
                 etResultName.setText(strNames);
                 etResultNumber.setText(strNumbers);
 
-                cursor.close();
-                sqlDb.close();
-
-                Toast.makeText(MainActivity.this, "조회됨", Toast.LENGTH_LONG).show();
+//                cursor.close();
+//                sqlDb.close();
+                Toast.makeText(MainActivity.this
+                        , "조회됨", Toast.LENGTH_LONG).show();
             }
         });
 
+        //데이터 갱신
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sqlDb = myDbHelper.getWritableDatabase();
+                GroupItem item = new GroupItem(etName.getText().toString(), Integer.parseInt(etNumber.getText().toString()));
 
-                sqlDb.execSQL("UPDATE " + MyDbContracts.GroupEntary.TABLE_NAME
-                        + " SET " + MyDbContracts.GroupEntary.COLUMN_GROUP_NUMBER
-                        + " = " + etNumber.getText().toString()
-                        + " WHERE " + MyDbContracts.GroupEntary.COLUMN_GROUP_NAME
-                        + " = '" + etName.getText().toString() + "';");
+                try {
+                    if(mMyDaoImpl.updateGroupByName(etName.getText().toString(), item)){
+                        Toast.makeText(MainActivity.this, "수정됨", Toast.LENGTH_LONG).show();
 
-                sqlDb.close();
+                        btnSelect.callOnClick();
+                    }else{
+                        Toast.makeText(MainActivity.this, "수정 실패", Toast.LENGTH_LONG).show();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 
-                Toast.makeText(MainActivity.this, "수정됨", Toast.LENGTH_LONG).show();
+//                sqlDb = myDbHelper.getWritableDatabase();
 
-                btnSelect.callOnClick();
+//                sqlDb.execSQL("UPDATE " + MyDbContracts.GroupEntary.TABLE_NAME
+//                        + " SET " + MyDbContracts.GroupEntary.COLUMN_GROUP_NUMBER
+//                        + " = " + etNumber.getText().toString()
+//                        + " WHERE " + MyDbContracts.GroupEntary.COLUMN_GROUP_NAME
+//                        + " = '" + etName.getText().toString() + "';");
+//
+//                sqlDb.close();
+
+//                Toast.makeText(MainActivity.this, "수정됨", Toast.LENGTH_LONG).show();
+//
+//                btnSelect.callOnClick();
             }
         });
 
+        //데이터 삭제
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sqlDb = myDbHelper.getWritableDatabase();
 
-                Log.e(TAG, "DELETE FROM " + MyDbContracts.GroupEntary.TABLE_NAME
-                        + " WHERE " + MyDbContracts.GroupEntary.COLUMN_GROUP_NAME
-                        + " = '" + etName.getText().toString() + "';");
+                try {
+                    if(mMyDaoImpl.deleteGroupByName(etName.getText().toString())){
+                        Toast.makeText(MainActivity.this, "삭제됨", Toast.LENGTH_LONG).show();
 
-                sqlDb.execSQL("DELETE FROM " + MyDbContracts.GroupEntary.TABLE_NAME
-                        + " WHERE " + MyDbContracts.GroupEntary.COLUMN_GROUP_NAME
-                        + " = '" + etName.getText().toString() + "';");
+                        btnSelect.callOnClick();
+                    }else{
+                        Toast.makeText(MainActivity.this, "삭제 실패", Toast.LENGTH_LONG).show();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 
-                sqlDb.close();
+//                sqlDb = myDbHelper.getWritableDatabase();
+//
+//                Log.e(TAG, "DELETE FROM " + MyDbContracts.GroupEntary.TABLE_NAME
+//                        + " WHERE " + MyDbContracts.GroupEntary.COLUMN_GROUP_NAME
+//                        + " = '" + etName.getText().toString() + "';");
+//
+//                sqlDb.execSQL("DELETE FROM " + MyDbContracts.GroupEntary.TABLE_NAME
+//                        + " WHERE " + MyDbContracts.GroupEntary.COLUMN_GROUP_NAME
+//                        + " = '" + etName.getText().toString() + "';");
+//
+//                sqlDb.close();
 
-                Toast.makeText(MainActivity.this, "삭제됨", Toast.LENGTH_LONG).show();
-
-                btnSelect.callOnClick();
+//                Toast.makeText(MainActivity.this, "삭제됨", Toast.LENGTH_LONG).show();
+//
+//                btnSelect.callOnClick();
             }
         });
     }
